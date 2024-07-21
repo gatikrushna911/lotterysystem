@@ -32,8 +32,8 @@ The Lottery System REST API allows users to create tickets with multiple lines, 
 ### Setup Instructions
 
 1. Clone the repository:
-- git clone https://github.com/your-repo/lottery-system.git
-- cd lottery-system
+- git clone git@github.com:gatikrushna911/lotterysystem.git
+- cd lotterysystem
    
 2. Configure the database:
 
