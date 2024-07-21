@@ -1,0 +1,19 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Java
+*.class
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# Package Files #
+*.jar
+*.war
+*.ear
