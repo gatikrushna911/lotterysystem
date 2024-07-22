@@ -1,9 +1,10 @@
 package com.poppulo.lotterysystem;
-
+import static com.poppulo.lotterysystem.utils.Constants.ILLEGAL_ARGUMENTS;
+import static com.poppulo.lotterysystem.utils.Constants.LINES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -19,112 +20,99 @@ import org.springframework.http.ResponseEntity;
 import com.poppulo.lotterysystem.controller.TicketController;
 import com.poppulo.lotterysystem.dto.ResponseDTO;
 import com.poppulo.lotterysystem.entity.Ticket;
-import com.poppulo.lotterysystem.exceptions.TicketCheckedException;
 import com.poppulo.lotterysystem.exceptions.TicketNotFoundException;
 import com.poppulo.lotterysystem.service.TicketService;
 import com.poppulo.lotterysystem.utils.TicketMapper;
 
 @SpringBootTest
 public class TicketControllerTest {
-	
-	  @InjectMocks
-	    private TicketController ticketController;
 
-	  @Mock
-	   private TicketService ticketService;
-	   
-	   @Test
-	    public void createTicket_ValidRequest_Success() {
-	        Map<String, Integer> request = Map.of("lines", 3);
-	        Ticket ticket = new Ticket();
-	        ResponseDTO responseDTO = TicketMapper.toResponseDTO(ticket);
+    @InjectMocks
+    private TicketController ticketController;
 
-	        when(ticketService.createTicket(3)).thenReturn(responseDTO);
+    @Mock
+    private TicketService ticketService;
 
-	        ResponseEntity<ResponseDTO> response = ticketController.createTicket(request);
+    @Test
+    public void createTicket_ValidRequest_Success() {
+        Map<String, Integer> request = Map.of(LINES, 3);
+        Ticket ticket = new Ticket();
+        ResponseDTO responseDTO = TicketMapper.toResponseDTO(ticket);
 
-	        assertEquals(HttpStatus.OK, response.getStatusCode());
-	        assertNotNull(response.getBody());
-	        assertTrue(response.getBody().isSuccess());
-	    }
-	   @Test
-	   public void createTicket_InvalidRequest_MissingLines() {
-	        Map<String, Integer> request = Map.of();
+        when(ticketService.createTicket(3)).thenReturn(responseDTO);
 
-	        try {
-	            ticketController.createTicket(request);
-	            fail("Expected IllegalArgumentException");
-	        } catch (IllegalArgumentException ex) {
-	            assertEquals("The 'lines' parameter must be provided and greater than 0.", ex.getMessage());
-	        }
-	    }
-	    @Test
-	    public void getAllTickets_Success() {
-	        List<Ticket> tickets = List.of(new Ticket(), new Ticket());
-	        ResponseDTO responseDTO = TicketMapper.toResponseDTO(tickets);
+        ResponseEntity<ResponseDTO> response = ticketController.createTicket(request);
 
-	        when(ticketService.getAllTickets()).thenReturn(responseDTO);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().isSuccess());
+    }
 
-	        ResponseEntity<ResponseDTO> response = ticketController.getAllTickets();
+    @Test
+    public void createTicket_InvalidRequest_MissingLines() {
+        Map<String, Integer> request = Map.of();
 
-	        assertEquals(HttpStatus.OK, response.getStatusCode());
-	        assertNotNull(response.getBody());
-	        assertTrue(response.getBody().hasTickets());
-	    }
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            ticketController.createTicket(request);
+        });
 
-	    @Test
-	    public void getTicket_ValidId_Success() {
-	        Long id = 1L;
-	        Ticket ticket = new Ticket();
-	        ResponseDTO responseDTO = TicketMapper.toResponseDTO(ticket);
+        assertEquals(ILLEGAL_ARGUMENTS, exception.getMessage());
+    }
 
-	        when(ticketService.getTicket(id)).thenReturn(responseDTO);
+    @Test
+    public void getAllTickets_Success() {
+        List<Ticket> tickets = List.of(new Ticket(), new Ticket());
+        ResponseDTO responseDTO = TicketMapper.toResponseDTO(tickets);
 
-	        ResponseEntity<ResponseDTO> response = ticketController.getTicket(id);
+        when(ticketService.getAllTickets()).thenReturn(responseDTO);
 
-	        assertEquals(HttpStatus.OK, response.getStatusCode());
-	        assertNotNull(response.getBody());
-	    }
+        ResponseEntity<ResponseDTO> response = ticketController.getAllTickets();
 
-	   /* @Test
-	    public void getTicket_InvalidId_NotFound() {
-	        Long id = 1L;
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().hasTickets());
+    }
 
-	        when(ticketService.getTicket(id)).thenThrow(new TicketNotFoundException(id));
+    @Test
+    public void getTicket_ValidId_Success() {
+        Long id = 1L;
+        Ticket ticket = new Ticket();
+        ResponseDTO responseDTO = TicketMapper.toResponseDTO(ticket);
 
-	        ResponseEntity<ResponseDTO> response = ticketController.getTicket(id);
+        when(ticketService.getTicket(id)).thenReturn(responseDTO);
 
-	        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-	        assertNotNull(response.getBody());
-	        assertTrue(response.getBody().hasError());
-	    }*/
+        ResponseEntity<ResponseDTO> response = ticketController.getTicket(id);
 
-	   @Test
-	    public void amendTicket_ValidRequest_Success() {
-	        Long id = 1L;
-	        Map<String, Integer> request = Map.of("lines", 3);
-	        Ticket ticket = new Ticket();
-	        ResponseDTO responseDTO = TicketMapper.toResponseDTO(ticket);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
 
-	        when(ticketService.amendTicket(id, 3)).thenReturn(responseDTO);
+    @Test
+    public void getTicket_InvalidId_NotFound() {
+        Long id = 1L;
 
-	        ResponseEntity<ResponseDTO> response = ticketController.amendTicket(id, request);
+        when(ticketService.getTicket(id)).thenThrow(new TicketNotFoundException(id));
 
-	        assertEquals(HttpStatus.OK, response.getStatusCode());
-	        assertNotNull(response.getBody());
-	    }
+        Exception exception = assertThrows(TicketNotFoundException.class, () -> {
+            ticketController.getTicket(id);
+        });
 
-	    /*@Test
-	    public void amendTicket_TicketChecked_Exception() {
-	        Long id = 1L;
-	        Map<String, Integer> request = Map.of("lines", 3);
+        assertEquals("Ticket with id 1 not found.", exception.getMessage());
+    }
 
-	        when(ticketService.amendTicket(id, 3)).thenThrow(new TicketCheckedException(id));
+    @Test
+    public void amendTicket_ValidRequest_Success() {
+        Long id = 1L;
+        Map<String, Integer> request = Map.of(LINES, 3);
+        Ticket ticket = new Ticket();
+        ResponseDTO responseDTO = TicketMapper.toResponseDTO(ticket);
 
-	        ResponseEntity<ResponseDTO> response = ticketController.amendTicket(id, request);
+        when(ticketService.amendTicket(id, 3)).thenReturn(responseDTO);
 
-	        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-	        assertNotNull(response.getBody());
-	        assertTrue(response.getBody().hasError());
-	    }*/
+        ResponseEntity<ResponseDTO> response = ticketController.amendTicket(id, request);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
 }

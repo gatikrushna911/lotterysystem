@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import static com.poppulo.lotterysystem.utils.Constants.*;
 import com.poppulo.lotterysystem.dto.ResponseDTO;
 import com.poppulo.lotterysystem.service.TicketService;
+import com.poppulo.lotterysystem.utils.Constants;
 
 @RestController
 @RequestMapping("/ticket")
@@ -26,10 +27,10 @@ public class TicketController {
 	@PostMapping
 	public ResponseEntity<ResponseDTO> createTicket(@RequestBody Map<String, Integer> request) {
 		// Input validation
-		if (request == null || !request.containsKey("lines") || request.get("lines") <= 0) {
-			throw new IllegalArgumentException("The 'lines' parameter must be provided and greater than 0.");
+		if (request == null || !request.containsKey(LINES) || request.get(LINES) <= 0) {
+			throw new IllegalArgumentException(ILLEGAL_ARGUMENTS);
 		}
-		int lines = request.get("lines");
+		int lines = request.get(Constants.LINES);
 		ResponseDTO response = ticketService.createTicket(lines);
 
 		if (response.hasError()) {
@@ -53,11 +54,11 @@ public class TicketController {
 	@PutMapping("/{id}")
 	public ResponseEntity<ResponseDTO> amendTicket(@PathVariable Long id, @RequestBody Map<String, Integer> request) {
 
-		if (request == null || !request.containsKey("lines") || request.get("lines") <= 0) {
-			throw new IllegalArgumentException("The 'lines' parameter must be provided and greater than 0.");
+		if (request == null || !request.containsKey(LINES) || request.get(LINES) <= 0) {
+			throw new IllegalArgumentException(Constants.ILLEGAL_ARGUMENTS);
 		}
 
-		int lines = request.get("lines");
+		int lines = request.get(Constants.LINES);
 		ResponseDTO response = ticketService.amendTicket(id, lines);
 
 		if (response.hasError()) {

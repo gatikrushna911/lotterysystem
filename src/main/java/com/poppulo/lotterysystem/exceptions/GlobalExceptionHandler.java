@@ -1,7 +1,5 @@
 package com.poppulo.lotterysystem.exceptions;
 
-import java.util.Collections;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,7 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.poppulo.lotterysystem.dto.ErrorDTO;
 import com.poppulo.lotterysystem.dto.ResponseDTO;
-import com.poppulo.lotterysystem.dto.TicketDTO;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

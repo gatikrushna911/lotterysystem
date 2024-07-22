@@ -1,12 +1,13 @@
 package com.poppulo.lotterysystem.service;
 
+import static com.poppulo.lotterysystem.utils.Constants.*;
+
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.poppulo.lotterysystem.dto.ResponseDTO;
@@ -33,7 +34,7 @@ public class TicketService {
 
 			return TicketMapper.toResponseDTO(ticket);
 		} catch (Exception ex) {
-			throw new TicketCreationException("Failed to create ticket", ex);
+			throw new TicketCreationException(TICKET_CREATION_FAILED, ex);
 		}
 	}
 
@@ -77,8 +78,6 @@ public class TicketService {
 	private Line generateRandomLine() {
 		Random random = new Random();
 		return new Line(random.nextInt(3), random.nextInt(3), random.nextInt(3));
-		// return new Line((int) (Math.random() * 3), (int) (Math.random() * 3), (int)
-		// (Math.random() * 3));
 	}
 
 	private int calculateResult(Line line) {

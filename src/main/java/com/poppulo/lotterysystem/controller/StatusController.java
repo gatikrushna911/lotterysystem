@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.poppulo.lotterysystem.dto.ResponseDTO;
-import com.poppulo.lotterysystem.entity.Ticket;
 import com.poppulo.lotterysystem.service.TicketService;
 
 @RestController

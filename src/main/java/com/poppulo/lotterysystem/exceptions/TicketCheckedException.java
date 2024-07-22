@@ -1,7 +1,9 @@
 package com.poppulo.lotterysystem.exceptions;
 
+import static com.poppulo.lotterysystem.utils.Constants.*;
+
 public class TicketCheckedException extends RuntimeException {
     public TicketCheckedException(Long id) {
-        super("Ticket with id " + id + " has already been checked.");
+        super(TICKET_ID+ id + CHECKED);
     }
 }
