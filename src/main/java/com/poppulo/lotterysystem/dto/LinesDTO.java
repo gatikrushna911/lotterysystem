@@ -9,6 +9,12 @@ public class LinesDTO {
     private int number3;
     private int result;
     
+    /**
+     * Default constructor for JSON deserialization
+     */
+    public LinesDTO() {
+    }
+    
     public LinesDTO(Line line) {
     	this.setNumber1(line.getNumber1());
     	this.setNumber2(line.getNumber2());
